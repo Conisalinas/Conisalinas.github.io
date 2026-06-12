@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Constanza Salinas Ramírez — Finanzas · Automatización · Data</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400;1,9..144,500&family=Sora:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --noche:#0D1322;
+    --noche-2:#131A2E;
+    --crema:#F2EDE3;
+    --crema-dim:#B9B4AC;
+    --celeste:#82C7E8;
+    --lila:#A99BD4;
+    --linea:rgba(242,237,227,.12);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{animation:none!important;transition:none!important}
+  }
+  body{
+    background:var(--noche);
+    color:var(--crema);
+    font-family:'Sora',sans-serif;
+    font-weight:300;
+    line-height:1.65;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--celeste);color:var(--noche)}
+  a{color:var(--celeste);text-decoration:none}
+  a:focus-visible,button:focus-visible{outline:2px solid var(--celeste);outline-offset:3px}
+
+  .wrap{max-width:1060px;margin:0 auto;padding:0 24px}
+
+  /* ---------- NAV ---------- */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:50;
+    background:rgba(13,19,34,.82);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--linea);
+  }
+  .nav-inner{
+    max-width:1060px;margin:0 auto;padding:16px 24px;
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  .logo{font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--crema);letter-spacing:.05em}
+  .logo b{color:var(--celeste);font-weight:500}
+  .nav-links{display:flex;gap:28px}
+  .nav-links a{
+    font-family:'JetBrains Mono',monospace;font-size:.74rem;
+    color:var(--crema-dim);letter-spacing:.08em;text-transform:uppercase;
+    transition:color .2s;
+  }
+  .nav-links a:hover{color:var(--celeste)}
+  @media(max-width:640px){.nav-links{display:none}}
+
+  /* ---------- HERO 3D ---------- */
+  header{
+    position:relative;min-height:100svh;
+    display:flex;align-items:center;
+  }
+  #escena{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0}
+  .libra-tag{
+    position:absolute;top:110px;left:4%;z-index:2;
+    font-family:'JetBrains Mono',monospace;font-size:.64rem;
+    color:rgba(169,155,212,.75);letter-spacing:.14em;
+    animation:aparecer 1.2s .8s ease both;
+  }
+  @media(max-width:760px){.libra-tag{display:none}}
+  .hero-content{position:relative;z-index:2;padding:120px 0 80px;pointer-events:none}
+  .hero-content a,.hero-content .tag{pointer-events:auto}
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;font-size:.78rem;
+    color:var(--celeste);letter-spacing:.18em;text-transform:uppercase;
+    margin-bottom:22px;
+    animation:aparecer .9s ease both;
+  }
+  h1{
+    font-family:'Fraunces',serif;font-weight:400;
+    font-size:clamp(2.2rem,5.6vw,4.2rem);
+    line-height:1.08;letter-spacing:-.01em;
+    max-width:15ch;
+    animation:aparecer .9s .15s ease both;
+  }
+  h1 em{font-style:italic;color:var(--celeste);font-weight:500}
+  .hero-sub{
+    margin-top:26px;max-width:46ch;
+    color:var(--crema-dim);font-size:1.02rem;
+    animation:aparecer .9s .3s ease both;
+  }
+  .hero-tags{margin-top:34px;display:flex;flex-wrap:wrap;gap:10px;animation:aparecer .9s .45s ease both}
+  .tag{
+    font-family:'JetBrains Mono',monospace;font-size:.72rem;
+    border:1px solid var(--linea);border-radius:100px;
+    padding:7px 16px;color:var(--crema-dim);letter-spacing:.04em;
+    background:rgba(13,19,34,.55);backdrop-filter:blur(4px);
+  }
+  .tag.celeste{border-color:rgba(130,199,232,.45);color:var(--celeste)}
+  @keyframes aparecer{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+  .scroll-hint{
+    position:absolute;bottom:28px;left:50%;transform:translateX(-50%);
+    font-family:'JetBrains Mono',monospace;font-size:.68rem;
+    color:var(--crema-dim);letter-spacing:.2em;text-transform:uppercase;
+    animation:flotar 2.6s ease-in-out infinite;z-index:2;
+  }
+  @keyframes flotar{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,8px)}}
+  .hint-robot{
+    position:absolute;bottom:70px;left:50%;transform:translateX(-50%);
+    font-family:'JetBrains Mono',monospace;font-size:.64rem;
+    color:rgba(169,155,212,.7);letter-spacing:.12em;z-index:2;
+  }
+  @media(max-width:760px){
+    .hero-content{padding-top:100px}
+    h1{font-size:clamp(2rem,9vw,2.6rem)}
+  }
+
+  /* ---------- SECTIONS ---------- */
+  section{padding:96px 0;border-top:1px solid var(--linea);position:relative;background:transparent;z-index:1}
+  .sec-label{
+    font-family:'JetBrains Mono',monospace;font-size:.74rem;
+    color:var(--celeste);letter-spacing:.18em;text-transform:uppercase;
+    margin-bottom:14px;
+  }
+  h2{
+    font-family:'Fraunces',serif;font-weight:400;
+    font-size:clamp(1.7rem,3.4vw,2.5rem);line-height:1.15;
+    margin-bottom:42px;max-width:24ch;
+  }
+  h2 em{font-style:italic;color:var(--lila)}
+
+  /* ---------- TRAYECTORIA ---------- */
+  .const-track{position:relative;padding-left:34px}
+  .const-track::before{
+    content:'';position:absolute;left:9px;top:8px;bottom:8px;width:1px;
+    background:linear-gradient(to bottom, var(--celeste), var(--lila), transparent);
+    opacity:.5;
+  }
+  .estrella{position:relative;padding:0 0 46px}
+  .estrella:last-child{padding-bottom:0}
+  .estrella::before{
+    content:'';position:absolute;left:-30px;top:8px;
+    width:9px;height:9px;border-radius:50%;
+    background:var(--celeste);
+    box-shadow:0 0 12px 2px rgba(130,199,232,.55);
+  }
+  .estrella.actual::before{
+    background:var(--crema);
+    box-shadow:0 0 16px 4px rgba(242,237,227,.6);
+    animation:pulso 2.4s ease-in-out infinite;
+  }
+  @keyframes pulso{0%,100%{box-shadow:0 0 10px 2px rgba(242,237,227,.45)}50%{box-shadow:0 0 20px 6px rgba(242,237,227,.75)}}
+  .est-fecha{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--lila);letter-spacing:.1em;margin-bottom:6px}
+  .est-titulo{font-weight:500;font-size:1.08rem;margin-bottom:4px}
+  .est-org{color:var(--celeste);font-size:.92rem;margin-bottom:8px;font-family:'JetBrains Mono',monospace}
+  .est-desc{color:var(--crema-dim);font-size:.93rem;max-width:62ch}
+
+  /* ---------- PROYECTOS (tilt 3D) ---------- */
+  .proyectos{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:18px;perspective:1200px}
+  .card{
+    background:var(--noche-2);
+    border:1px solid var(--linea);
+    border-radius:14px;
+    padding:28px 26px;
+    transition:transform .18s ease-out, border-color .25s, box-shadow .25s;
+    display:flex;flex-direction:column;gap:12px;
+    transform-style:preserve-3d;
+    will-change:transform;
+  }
+  .card:hover{border-color:rgba(130,199,232,.4);box-shadow:0 18px 40px -18px rgba(130,199,232,.25)}
+  .card-tipo{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--lila);letter-spacing:.12em;text-transform:uppercase}
+  .card h3{font-family:'Fraunces',serif;font-weight:600;font-size:1.18rem;line-height:1.3}
+  .card p{color:var(--crema-dim);font-size:.9rem;flex:1}
+  .card-stack{display:flex;flex-wrap:wrap;gap:7px;margin-top:4px}
+  .card-stack span{
+    font-family:'JetBrains Mono',monospace;font-size:.66rem;
+    background:rgba(169,155,212,.12);color:var(--lila);
+    padding:4px 10px;border-radius:100px;
+  }
+  .card.destacado{border-color:rgba(130,199,232,.5);background:linear-gradient(160deg,rgba(130,199,232,.08),var(--noche-2) 55%)}
+  .card.destacado .card-tipo{color:var(--celeste)}
+
+  /* ---------- SKILLS ---------- */
+  .skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:32px 40px}
+  .skill-col h3{
+    font-family:'JetBrains Mono',monospace;font-weight:500;font-size:.8rem;
+    color:var(--celeste);letter-spacing:.12em;text-transform:uppercase;
+    margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--linea);
+  }
+  .skill-col ul{list-style:none}
+  .skill-col li{color:var(--crema-dim);font-size:.92rem;padding:5px 0;display:flex;align-items:baseline;gap:10px}
+  .skill-col li::before{content:'✦';color:var(--lila);font-size:.6rem}
+
+  /* ---------- SOBRE MI ---------- */
+  .dos-col{display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:start}
+  @media(max-width:760px){.dos-col{grid-template-columns:1fr}}
+  .prosa p{color:var(--crema-dim);margin-bottom:18px;font-size:.98rem}
+  .prosa strong{color:var(--crema);font-weight:500}
+  .dato-box{background:var(--noche-2);border:1px solid var(--linea);border-radius:14px;padding:26px}
+  .dato-box h3{
+    font-family:'JetBrains Mono',monospace;font-size:.74rem;font-weight:500;
+    color:var(--celeste);letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px;
+  }
+  .dato{padding:12px 0;border-bottom:1px solid var(--linea)}
+  .dato:last-child{border-bottom:none}
+  .dato .k{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--lila);letter-spacing:.1em;text-transform:uppercase}
+  .dato .v{font-size:.92rem;margin-top:3px}
+
+  /* ---------- CONTACTO ---------- */
+  .contacto{text-align:center;padding:110px 0}
+  .contacto h2{margin:0 auto 18px}
+  .contacto p{color:var(--crema-dim);max-width:46ch;margin:0 auto 36px}
+  .btn{
+    display:inline-block;
+    font-family:'JetBrains Mono',monospace;font-size:.82rem;letter-spacing:.06em;
+    background:var(--celeste);color:var(--noche);
+    padding:15px 36px;border-radius:100px;font-weight:500;
+    transition:transform .2s, box-shadow .2s;
+  }
+  .btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(130,199,232,.35)}
+  .btn.fantasma{background:transparent;color:var(--crema);border:1px solid var(--linea);margin-left:12px}
+  .btn.fantasma:hover{border-color:var(--celeste);color:var(--celeste);box-shadow:none}
+  @media(max-width:520px){.btn.fantasma{margin-left:0;margin-top:12px}}
+
+  footer{
+    border-top:1px solid var(--linea);
+    padding:30px 0;text-align:center;
+    font-family:'JetBrains Mono',monospace;font-size:.7rem;
+    color:var(--crema-dim);letter-spacing:.06em;
+  }
+  footer span{color:var(--celeste)}
+
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease, transform .7s ease}
+  .reveal.visto{opacity:1;transform:none}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="logo"><b>CS</b> · constanza salinas</div>
+    <div class="nav-links">
+      <a href="#trayectoria">Trayectoria</a>
+      <a href="#proyectos">Proyectos</a>
+      <a href="#skills">Skills</a>
+      <a href="#sobre-mi">Sobre mí</a>
+      <a href="#contacto">Contacto</a>
+    </div>
+  </div>
+</nav>
+
+<header>
+  <canvas id="escena" aria-hidden="true"></canvas>
+  <p class="libra-tag">♎ constelación de libra</p>
+  <div class="wrap hero-content">
+    <p class="eyebrow">Finanzas · Automatización · Data Science</p>
+    <h1>De mirar <em>estrellas</em> a hacer hablar los <em>datos</em></h1>
+    <p class="hero-sub">
+      Soy Constanza Salinas Ramírez, Contadora Pública Auditora. Hoy automatizo
+      procesos de tesorería y finanzas en Cabify, combinando rigor contable con
+      Python, BI y una curiosidad que partió en la astronomía.
+    </p>
+    <div class="hero-tags">
+      <span class="tag celeste">Treasury &amp; Finance Automation @ Cabify</span>
+      <span class="tag">Ex KPMG · Automation Projects</span>
+      <span class="tag">Magíster Business Analytics &amp; DS · UDP</span>
+    </div>
+  </div>
+  <p class="hint-robot">⌁ el robot te sigue con la mirada · haz click y salta</p>
+  <div class="scroll-hint">↓ explorar</div>
+</header>
+
+<section id="trayectoria">
+  <div class="wrap">
+    <p class="sec-label">01 — Trayectoria</p>
+    <h2>Una órbita <em>poco convencional</em></h2>
+    <div class="const-track">
+
+      <div class="estrella reveal">
+        <p class="est-fecha">Origen</p>
+        <p class="est-titulo">Astronomía → Python</p>
+        <p class="est-org">El punto de partida</p>
+        <p class="est-desc">Estudié Astronomía antes de Auditoría. Ahí aprendí a programar en Python y a trabajar con datos reales: la base de todo lo que vino después.</p>
+      </div>
+
+      <div class="estrella reveal">
+        <p class="est-fecha">Formación</p>
+        <p class="est-titulo">Contadora Pública Auditora</p>
+        <p class="est-org">Universidad de La Serena</p>
+        <p class="est-desc">Rigor contable y financiero bajo normas NIIF/NIC, conciliaciones y control. La estructura que ordena el caos de los datos.</p>
+      </div>
+
+      <div class="estrella reveal">
+        <p class="est-fecha">Hasta 2026</p>
+        <p class="est-titulo">Senior Head of Automation Projects</p>
+        <p class="est-org">KPMG Chile · Centro de Innovación y Desarrollo</p>
+        <p class="est-desc">Lideré proyectos de automatización para equipos de auditoría: scraping con Selenium, pipelines en Power Query, reportería en Power BI conectada a SQL Server y macros VBA para procesos críticos.</p>
+      </div>
+
+      <div class="estrella reveal">
+        <p class="est-fecha">2025 — Hoy</p>
+        <p class="est-titulo">Magíster en Business Analytics &amp; Data Science</p>
+        <p class="est-org">Universidad Diego Portales</p>
+        <p class="est-desc">Machine learning, estadística aplicada y analítica de negocios: profundizando la base técnica con fundamento teórico.</p>
+      </div>
+
+      <div class="estrella actual reveal">
+        <p class="est-fecha">2026 — Actual</p>
+        <p class="est-titulo">Treasury &amp; Finance Automation Analyst</p>
+        <p class="est-org">Cabify · Santiago de Chile</p>
+        <p class="est-desc">Automatizo procesos de tesorería y finanzas. Desarrollé una aplicación web interna que automatiza tareas rutinarias del equipo, liberando horas de trabajo manual cada semana.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="proyectos">
+  <div class="wrap">
+    <p class="sec-label">02 — Proyectos</p>
+    <h2>Automatizaciones que <em>liberan tiempo</em></h2>
+    <div class="proyectos">
+
+      <div class="card destacado reveal">
+        <p class="card-tipo">★ Proyecto actual</p>
+        <h3>Web interna de automatización — Cabify</h3>
+        <p>Aplicación web que centraliza y automatiza procesos rutinarios del equipo de tesorería y finanzas, reemplazando tareas manuales repetitivas por flujos de un clic.</p>
+        <div class="card-stack"><span>Python</span><span>Web App</span><span>Automatización</span></div>
+      </div>
+
+      <div class="card reveal">
+        <p class="card-tipo">Web Scraping</p>
+        <h3>Consulta masiva Poder Judicial</h3>
+        <p>Script en Python + Selenium que consulta causas judiciales por RUT en lote, transformando horas de búsqueda manual en minutos de ejecución automática.</p>
+        <div class="card-stack"><span>Python</span><span>Selenium</span><span>pandas</span></div>
+      </div>
+
+      <div class="card reveal">
+        <p class="card-tipo">Business Intelligence</p>
+        <h3>Reporte de saldos de vacaciones</h3>
+        <p>Dashboard en Power BI conectado a SQL Server para visibilizar saldos de vacaciones del personal de auditoría, con actualización automática.</p>
+        <div class="card-stack"><span>Power BI</span><span>SQL Server</span></div>
+      </div>
+
+      <div class="card reveal">
+        <p class="card-tipo">Data Pipeline</p>
+        <h3>Reporte de chargeability</h3>
+        <p>Pipeline en Power Query que integra fuentes MAGMA, IBS y BUK para consolidar la chargeability del equipo, eliminando el armado manual del reporte.</p>
+        <div class="card-stack"><span>Power Query</span><span>Excel</span></div>
+      </div>
+
+      <div class="card reveal">
+        <p class="card-tipo">Machine Learning</p>
+        <h3>Clasificador de riesgo crediticio</h3>
+        <p>Modelo Random Forest para predecir aceptación de créditos bancarios, con análisis exploratorio completo y validación de métricas. Proyecto académico del Magíster.</p>
+        <div class="card-stack"><span>scikit-learn</span><span>pandas</span><span>Python</span></div>
+      </div>
+
+      <div class="card reveal">
+        <p class="card-tipo">Automatización Office</p>
+        <h3>Gestión de despachos en Excel</h3>
+        <p>Sistema de seguimiento de guías de despacho por patente para una empresa de transporte, procesado automáticamente con openpyxl sobre múltiples hojas.</p>
+        <div class="card-stack"><span>openpyxl</span><span>Excel</span><span>Python</span></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="wrap">
+    <p class="sec-label">03 — Skills</p>
+    <h2>Caja de <em>herramientas</em></h2>
+    <div class="skills-grid">
+      <div class="skill-col reveal">
+        <h3>Lenguajes &amp; Data</h3>
+        <ul>
+          <li>Python (pandas, openpyxl, Selenium)</li>
+          <li>scikit-learn / Machine Learning</li>
+          <li>SQL</li>
+          <li>VBA</li>
+        </ul>
+      </div>
+      <div class="skill-col reveal">
+        <h3>BI &amp; Reportería</h3>
+        <ul>
+          <li>Power BI</li>
+          <li>Power Query</li>
+          <li>Excel avanzado</li>
+          <li>Visualización de datos</li>
+        </ul>
+      </div>
+      <div class="skill-col reveal">
+        <h3>Finanzas &amp; ERP</h3>
+        <ul>
+          <li>Normas NIIF / NIC</li>
+          <li>Extracción de datos SAP</li>
+          <li>Conciliaciones financieras</li>
+          <li>Tesorería y control</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="sobre-mi">
+  <div class="wrap">
+    <p class="sec-label">04 — Sobre mí</p>
+    <h2>El perfil <em>híbrido</em></h2>
+    <div class="dos-col">
+      <div class="prosa reveal">
+        <p>Mi camino no fue lineal, y esa es mi ventaja. Partí en <strong>Astronomía</strong>, donde los datos eran estrellas y la herramienta era Python. Después me formé como <strong>Contadora Pública Auditora</strong>, donde los datos eran estados financieros y la herramienta era el criterio.</p>
+        <p>Hoy combino ambos mundos: entiendo el negocio financiero desde adentro y tengo las habilidades técnicas para automatizarlo. No traduzco entre el equipo de finanzas y el de tecnología — <strong>soy ambos</strong>.</p>
+        <p>También fui <strong>docente en la Universidad de La Serena</strong>: enseñar a otros me obligó a entender las cosas de raíz, y esa profundidad la aplico en cada proyecto.</p>
+      </div>
+      <div class="dato-box reveal">
+        <h3>Ficha rápida</h3>
+        <div class="dato"><p class="k">Ubicación</p><p class="v">Santiago, Chile</p></div>
+        <div class="dato"><p class="k">Rol actual</p><p class="v">Treasury &amp; Finance Automation Analyst</p></div>
+        <div class="dato"><p class="k">Experiencia</p><p class="v">Ex docente · U. de La Serena / Ex KPMG Chile</p></div>
+        <div class="dato"><p class="k">Estudios</p><p class="v">Magíster Business Analytics &amp; DS (UDP)</p></div>
+        <div class="dato"><p class="k">Diplomado</p><p class="v">Python &amp; Data Science (UC)</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="contacto" id="contacto">
+  <div class="wrap">
+    <p class="sec-label" style="text-align:center">05 — Contacto</p>
+    <h2 style="text-align:center">Dejo que mi <em>trabajo</em> hable por mí</h2>
+    <p>Lo mío no son los grandes discursos: son los procesos que funcionan en silencio. Si algo de lo que viste acá te hizo sentido, me encantará leerte. Con calma, sin apuro.</p>
+    <div>
+      <a class="btn" href="mailto:salinasconstanzara@gmail.com">Escribirme un correo</a>
+      <a class="btn fantasma" href="https://www.linkedin.com/in/constanza-salinas-ram%C3%ADrez/" target="_blank" rel="noopener">LinkedIn ↗</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>Constanza Salinas Ramírez · Santiago de Chile · <span>✦</span> hecho con datos y café</p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+  const reducirMov = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const canvas = document.getElementById('escena');
+  const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.FogExp2(0x0D1322, 0.035);
+
+  const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+  camera.position.set(0, 0.4, 9);
+
+  // ----- Luces -----
+  scene.add(new THREE.AmbientLight(0x8899bb, 0.55));
+  const luzCeleste = new THREE.DirectionalLight(0x82C7E8, 1.1);
+  luzCeleste.position.set(4, 5, 6);
+  scene.add(luzCeleste);
+  const luzLila = new THREE.PointLight(0xA99BD4, 1.2, 25);
+  luzLila.position.set(-5, -2, 4);
+  scene.add(luzLila);
+
+  // ----- Estrellas (fondo) -----
+  const starGeo = new THREE.BufferGeometry();
+  const N = 900;
+  const pos = new Float32Array(N * 3);
+  for(let i = 0; i < N; i++){
+    pos[i*3]   = (Math.random() - .5) * 60;
+    pos[i*3+1] = (Math.random() - .5) * 40;
+    pos[i*3+2] = -Math.random() * 40 - 5;
+  }
+  starGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  const stars = new THREE.Points(starGeo, new THREE.PointsMaterial({
+    color: 0xF2EDE3, size: 0.07, transparent: true, opacity: 0.8
+  }));
+  scene.add(stars);
+
+  // ----- Constelación de Libra ♎ -----
+  const libra = new THREE.Group();
+  // Estrellas principales (patrón simplificado: el triángulo de la balanza + los platillos)
+  const libraPts = [
+    [ 0.0,  2.1, 0],   // β Zubeneschamali
+    [-1.5,  0.7, 0],   // α Zubenelgenubi
+    [ 1.3,  1.0, 0],   // γ
+    [-1.9, -1.1, 0],   // σ
+    [ 1.1, -1.3, 0],   // τ
+    [ 1.4, -2.0, 0]    // υ
+  ];
+  const matEstrellaLibra = new THREE.MeshBasicMaterial({color:0xCDBFF5});
+  const estrellasLibra = [];
+  libraPts.forEach(p => {
+    const e = new THREE.Mesh(new THREE.SphereGeometry(0.085, 12, 12), matEstrellaLibra);
+    e.position.set(p[0], p[1], p[2]);
+    libra.add(e);
+    estrellasLibra.push(e);
+  });
+  // Líneas que unen la balanza
+  const conexiones = [[3,1],[1,0],[0,2],[2,4],[4,5],[1,2]];
+  const lineGeo = new THREE.BufferGeometry();
+  const linePos = [];
+  conexiones.forEach(c => {
+    linePos.push(...libraPts[c[0]], ...libraPts[c[1]]);
+  });
+  lineGeo.setAttribute('position', new THREE.Float32BufferAttribute(linePos, 3));
+  const lineas = new THREE.LineSegments(lineGeo, new THREE.LineBasicMaterial({
+    color: 0xA99BD4, transparent: true, opacity: 0.45
+  }));
+  libra.add(lineas);
+  libra.scale.setScalar(0.62);
+  scene.add(libra);
+
+  // ----- Materiales del robot -----
+  const matCuerpo = new THREE.MeshStandardMaterial({color:0xE8E4DA, metalness:0.55, roughness:0.32});
+  const matOscuro = new THREE.MeshStandardMaterial({color:0x1B2440, metalness:0.7, roughness:0.35});
+  const matCeleste = new THREE.MeshStandardMaterial({color:0x82C7E8, metalness:0.4, roughness:0.3, emissive:0x2A5A75, emissiveIntensity:0.4});
+  const matOjo = new THREE.MeshBasicMaterial({color:0x9FE3FF});
+  const matLila = new THREE.MeshStandardMaterial({color:0xA99BD4, emissive:0x4A3F7A, emissiveIntensity:0.5, metalness:0.3, roughness:0.4});
+
+  // ----- Robot -----
+  const robot = new THREE.Group();
+
+  // Cabeza (grupo aparte para que siga el mouse)
+  const cabeza = new THREE.Group();
+  const craneo = new THREE.Mesh(new THREE.SphereGeometry(0.85, 32, 32), matCuerpo);
+  craneo.scale.set(1, 0.92, 0.95);
+  cabeza.add(craneo);
+
+  // Visor
+  const visor = new THREE.Mesh(new THREE.SphereGeometry(0.62, 32, 24, 0, Math.PI*2, 0, Math.PI*0.62), matOscuro);
+  visor.rotation.x = -Math.PI/2.25;
+  visor.position.set(0, 0.06, 0.36);
+  cabeza.add(visor);
+
+  // Ojos brillantes
+  const ojoIzq = new THREE.Mesh(new THREE.SphereGeometry(0.105, 16, 16), matOjo);
+  ojoIzq.position.set(-0.24, 0.1, 0.78); ojoIzq.scale.set(1, 1.25, 0.6);
+  const ojoDer = ojoIzq.clone(); ojoDer.position.x = 0.24;
+  cabeza.add(ojoIzq, ojoDer);
+  const brilloOjos = new THREE.PointLight(0x9FE3FF, 0.9, 3.2);
+  brilloOjos.position.set(0, 0.1, 1.0);
+  cabeza.add(brilloOjos);
+
+  // Antena
+  const mastil = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.42, 12), matOscuro);
+  mastil.position.set(0, 0.95, 0);
+  const bolita = new THREE.Mesh(new THREE.SphereGeometry(0.09, 16, 16), matLila);
+  bolita.position.set(0, 1.2, 0);
+  cabeza.add(mastil, bolita);
+
+  // Orejas
+  const orejaIzq = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.13, 0.12, 20), matCeleste);
+  orejaIzq.rotation.z = Math.PI/2; orejaIzq.position.set(-0.85, 0.02, 0);
+  const orejaDer = orejaIzq.clone(); orejaDer.position.x = 0.85;
+  cabeza.add(orejaIzq, orejaDer);
+
+  cabeza.position.y = 0.95;
+  robot.add(cabeza);
+
+  // Torso
+  const torso = new THREE.Mesh(new THREE.SphereGeometry(0.72, 32, 32), matCuerpo);
+  torso.scale.set(1, 1.18, 0.85);
+  torso.position.y = -0.45;
+  robot.add(torso);
+
+  // Panel pecho (corazón de datos)
+  const panel = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 0.06, 24), matOscuro);
+  panel.rotation.x = Math.PI/2;
+  panel.position.set(0, -0.32, 0.58);
+  robot.add(panel);
+  const nucleo = new THREE.Mesh(new THREE.SphereGeometry(0.12, 20, 20), matCeleste);
+  nucleo.position.set(0, -0.32, 0.62);
+  robot.add(nucleo);
+
+  // Brazos (flotantes, sin unión: estilo androide amistoso)
+  const brazoIzq = new THREE.Mesh(new THREE.SphereGeometry(0.2, 20, 20), matCuerpo);
+  brazoIzq.scale.set(1, 1.6, 1);
+  brazoIzq.position.set(-1.0, -0.5, 0);
+  const brazoDer = brazoIzq.clone(); brazoDer.position.x = 1.0;
+  robot.add(brazoIzq, brazoDer);
+
+  // Base flotante (anillo)
+  const anillo = new THREE.Mesh(new THREE.TorusGeometry(0.55, 0.05, 14, 48), matLila);
+  anillo.rotation.x = Math.PI/2;
+  anillo.position.y = -1.55;
+  robot.add(anillo);
+
+  robot.position.set(2.4, 0.1, 0);
+  robot.scale.setScalar(1.05);
+  scene.add(robot);
+
+  // Posiciones según el ancho visible de la cámara (robot a la derecha, Libra arriba a la izquierda)
+  let baseX = 2.4, baseY = 0.1, baseZ = 0, baseEscala = 1.05;
+  function layout(){
+    const halfW = Math.tan(THREE.MathUtils.degToRad(22.5)) * camera.position.z * camera.aspect;
+    if(window.innerWidth < 760){
+      baseEscala = 0.5; baseX = halfW * 0.5; baseY = 2.3; baseZ = -1.5;
+    } else {
+      baseEscala = 1.0; baseX = Math.min(halfW * 0.62, halfW - 1.7); baseY = 0.1; baseZ = 0;
+    }
+    robot.position.set(baseX, baseY, baseZ);
+    robot.scale.setScalar(baseEscala);
+    libra.position.set(-halfW * 0.78, 2.7, -3.5);
+  }
+
+  // ----- Mouse tracking -----
+  let mx = 0, my = 0;
+  window.addEventListener('pointermove', e => {
+    mx = (e.clientX / window.innerWidth) * 2 - 1;
+    my = -(e.clientY / window.innerHeight) * 2 + 1;
+  });
+
+  // ----- Salto -----
+  let saltoY = 0, saltoV = 0, enSalto = false;
+  function saltar(){
+    if(!enSalto && !reducirMov){ enSalto = true; saltoV = 0.17; }
+  }
+  // Click en zonas vacías de la página → salto (no en links ni botones)
+  window.addEventListener('pointerdown', e => {
+    if(e.target.closest('a, button, input, .card')) return;
+    saltar();
+  });
+  setInterval(saltar, 6500); // salta solo de vez en cuando
+
+  // ----- Caída con el scroll -----
+  // Al bajar, el robot queda "arriba" y va cayendo con gravedad hasta alcanzarte
+  let lastScroll = window.scrollY, caida = 0, saltoHeroDado = false;
+  window.addEventListener('scroll', () => {
+    const d = window.scrollY - lastScroll;
+    lastScroll = window.scrollY;
+    caida += d * 0.0085;                       // scroll abajo → robot empujado hacia arriba
+    caida = Math.max(-2.2, Math.min(3.2, caida));
+    if(!saltoHeroDado && window.scrollY > window.innerHeight * 0.4){
+      saltar();                                 // salto de bienvenida al empezar a explorar
+      saltoHeroDado = true;
+    }
+  }, {passive:true});
+
+  // ----- Resize -----
+  function resize(){
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    if(canvas.width !== w || canvas.height !== h){
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      layout();
+    }
+  }
+
+  // ----- Animación -----
+  let t = 0;
+  function animar(){
+    resize();
+    t += 0.016;
+
+    // Física del salto (con estirón al subir y achatado al caer)
+    if(enSalto){
+      saltoY += saltoV;
+      saltoV -= 0.011;
+      if(saltoY <= 0){ saltoY = 0; saltoV = 0; enSalto = false; }
+    }
+    const stretch = 1 + Math.max(saltoV, 0) * 1.6;
+    robot.scale.set(baseEscala / Math.sqrt(stretch), baseEscala * stretch, baseEscala / Math.sqrt(stretch));
+
+    // La caída del scroll se asienta con gravedad suave (el robot "cae" hasta ti)
+    caida *= 0.93;
+
+    // Flotación rápida + salto + caída del scroll
+    robot.position.y = baseY + Math.sin(t * 2.6) * 0.12 + saltoY + caida;
+    robot.rotation.z = Math.sin(t * 1.8) * 0.06 + caida * 0.10;
+    robot.rotation.x = -caida * 0.12;          // se inclina mientras cae
+    anillo.rotation.z = t * 1.8;
+    bolita.position.y = 1.2 + Math.sin(t * 6) * 0.045;
+
+    // Constelación de Libra: titilar suave
+    estrellasLibra.forEach((e, i) => {
+      e.scale.setScalar(1 + Math.sin(t * 2 + i * 1.3) * 0.3);
+    });
+    libra.rotation.z = Math.sin(t * 0.25) * 0.03;
+
+    // Pulso del núcleo del pecho
+    const p = 1 + Math.sin(t * 3.6) * 0.16;
+    nucleo.scale.setScalar(p);
+
+    // Cabeza sigue al cursor (respuesta ágil)
+    const targetY = mx * 0.6;
+    const targetX = -my * 0.4;
+    cabeza.rotation.y += (targetY - cabeza.rotation.y) * 0.14;
+    cabeza.rotation.x += (targetX - cabeza.rotation.x) * 0.14;
+    // El cuerpo lo acompaña
+    robot.rotation.y += (mx * 0.22 - robot.rotation.y) * 0.07;
+
+    // Estrellas con deriva + parallax del mouse
+    stars.rotation.y = t * 0.014 + mx * 0.03;
+    stars.rotation.x = my * 0.02;
+
+    renderer.render(scene, camera);
+    if(!reducirMov) requestAnimationFrame(animar);
+  }
+
+  resize();
+  if(reducirMov){
+    animar(); // un solo frame estático
+  } else {
+    requestAnimationFrame(animar);
+  }
+  window.addEventListener('resize', () => { if(reducirMov){ resize(); renderer.render(scene, camera); } });
+})();
+
+// ----- Reveal al hacer scroll -----
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(en => { if(en.isIntersecting){ en.target.classList.add('visto'); obs.unobserve(en.target); } });
+}, { threshold: .12 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// ----- Tilt 3D en las cards de proyectos -----
+if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches && window.matchMedia('(hover:hover)').matches){
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('pointermove', e => {
+      const r = card.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - .5;
+      const y = (e.clientY - r.top) / r.height - .5;
+      card.style.transform = `rotateY(${x * 8}deg) rotateX(${-y * 8}deg) translateY(-4px)`;
+    });
+    card.addEventListener('pointerleave', () => { card.style.transform = ''; });
+  });
+}
+</script>
+</body>
+</html>
