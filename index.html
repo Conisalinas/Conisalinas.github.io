@@ -114,8 +114,10 @@
     color:rgba(169,155,212,.7);letter-spacing:.12em;z-index:2;
   }
   @media(max-width:760px){
-    .hero-content{padding-top:100px}
+    .hero-content{padding:104px 10px 150px}
     h1{font-size:clamp(2rem,9vw,2.6rem)}
+    .hero-sub{font-size:.96rem}
+    .hint-robot{display:none}
   }
 
   /* ---------- SECTIONS ---------- */
@@ -450,8 +452,9 @@
 (function(){
   const reducirMov = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const canvas = document.getElementById('escena');
+  const esMovil = () => window.innerWidth < 760;
   const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, esMovil() ? 1.5 : 2));
 
   const scene = new THREE.Scene();
   scene.fog = new THREE.FogExp2(0x0D1322, 0.035);
@@ -470,7 +473,7 @@
 
   // ----- Estrellas (fondo) -----
   const starGeo = new THREE.BufferGeometry();
-  const N = 900;
+  const N = esMovil() ? 320 : 900;
   const pos = new Float32Array(N * 3);
   for(let i = 0; i < N; i++){
     pos[i*3]   = (Math.random() - .5) * 60;
@@ -600,14 +603,17 @@
   let baseX = 2.4, baseY = 0.1, baseZ = 0, baseEscala = 1.05;
   function layout(){
     const halfW = Math.tan(THREE.MathUtils.degToRad(22.5)) * camera.position.z * camera.aspect;
-    if(window.innerWidth < 760){
-      baseEscala = 0.5; baseX = halfW * 0.5; baseY = 2.3; baseZ = -1.5;
+    if(esMovil()){
+      // Celular: robot chico, esquina superior derecha, detrás del contenido
+      baseEscala = 0.36; baseX = halfW * 0.66; baseY = 2.7; baseZ = -2;
+      libra.scale.setScalar(0.4);
+      libra.position.set(-halfW * 0.55, 3.4, -6);
     } else {
       baseEscala = 1.0; baseX = Math.min(halfW * 0.62, halfW - 1.7); baseY = 0.1; baseZ = 0;
+      libra.scale.setScalar(0.62);
+      libra.position.set(-halfW * 0.78, 2.7, -3.5);
     }
     robot.position.set(baseX, baseY, baseZ);
-    robot.scale.setScalar(baseEscala);
-    libra.position.set(-halfW * 0.78, 2.7, -3.5);
   }
 
   // ----- Mouse tracking -----
@@ -618,7 +624,7 @@
   });
 
   // ----- Salto -----
-  let saltoY = 0, saltoV = 0, enSalto = false;
+  let saltoY = 0, saltoV = 0, enSalto = false, escalaVisual = 1;
   function saltar(){
     if(!enSalto && !reducirMov){ enSalto = true; saltoV = 0.17; }
   }
@@ -666,8 +672,12 @@
       saltoV -= 0.011;
       if(saltoY <= 0){ saltoY = 0; saltoV = 0; enSalto = false; }
     }
+    // En celular el robot se desvanece al pasar el hero (para no tapar el contenido)
+    const escalaObjetivo = (esMovil() && window.scrollY > window.innerHeight * 0.7) ? 0 : baseEscala;
+    escalaVisual += (escalaObjetivo - escalaVisual) * 0.08;
     const stretch = 1 + Math.max(saltoV, 0) * 1.6;
-    robot.scale.set(baseEscala / Math.sqrt(stretch), baseEscala * stretch, baseEscala / Math.sqrt(stretch));
+    robot.scale.set(escalaVisual / Math.sqrt(stretch), escalaVisual * stretch, escalaVisual / Math.sqrt(stretch));
+    robot.visible = escalaVisual > 0.01;
 
     // La caída del scroll se asienta con gravedad suave (el robot "cae" hasta ti)
     caida *= 0.93;
